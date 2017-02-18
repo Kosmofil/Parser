@@ -5,10 +5,8 @@ public class DataSaver {
     private String urlNews;
     private String title;
     private String data;
-    private int count;
 
-    public DataSaver(final int count, final String title, final String urlNews, final String data) {
-        this.count = count;
+    public DataSaver(final String title, final String urlNews, final String data) {
         this.title = title;
         this.urlNews = urlNews;
         this.data = data;
@@ -25,4 +23,15 @@ public class DataSaver {
     public String getData() {
         return data;
     }
+
+    @Override
+    public String toString() {
+        return
+                "Заголовок новости = " + title +
+                ", urlNews = " + urlNews +
+                ", краткая новость = " + data
+                + "\n"
+                ;
+    }
+
 }

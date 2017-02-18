@@ -1,6 +1,5 @@
 package controller;
 
-import model.Choice;
 import model.DataSaver;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -8,15 +7,17 @@ import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 public class ParseJson {
     private Document doc = null;
-    private List<DataSaver> quotes = new ArrayList<>();
+    private Collection<DataSaver> quotes = new ArrayList<>();
 
-
-    public void connect() {
+    // TODO: 18.02.17 у новостей нет заголовков в quotes есть null испавить
+    public Collection<DataSaver> connect() {
 
         try {
             doc = Jsoup.connect("https://habrahabr.ru").userAgent("Mozilla").get();
@@ -24,15 +25,15 @@ public class ParseJson {
             e.printStackTrace();
         }
         final List<Element> elms = doc.select(".shortcuts_item");//".post__header"
-
-        elms.forEach((elem) -> {
-            int count = 0;
+        final Stream<Element> streamElement = elms.stream();
+// TODO: 18.02.17 сделать полное раскрытие новости 
+        streamElement.forEachOrdered((elem) -> {
             String title = getText(elem, "a[class=post__title_link]");
             String urlNews = getURL(elem, "div[class=buttons]");
             String data = getText(elem, "div[class=content html_format]");
-            quotes.add(new DataSaver(count++, title, urlNews, data));
+            quotes.add(new DataSaver(title, urlNews, data));
         });
-
+return quotes;
     }
 
     private static String getURL(Element element, String cssQuery) {//обрабатываю ссылку, надо переделать!!!
@@ -55,28 +56,5 @@ public class ParseJson {
         }
         return null;
     }
-
-    //выбераем что отобразить
-    public void showNewsWithChoice(Choice choice) {
-        switch (choice) {
-            case title:
-                for (DataSaver text : quotes) {
-                    System.out.println(text.getTitle());
-                }
-                break;
-            case url:
-                for (DataSaver text : quotes) {
-                    System.out.println(text.getUrl());
-                }
-                break;
-            case text:
-                for (DataSaver text : quotes) {
-                    System.out.println(text.getData());
-                }
-                break;
-        }
-
-    }
-
 
 }

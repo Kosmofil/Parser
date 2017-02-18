@@ -8,24 +8,22 @@
 
 import controller.CollectStatistics;
 import controller.ParseJson;
-import model.*;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+
 
 
 
 public class Main {
     public static void main(String[] args) throws IOException {
         ParseJson habr = new ParseJson();
-        habr.connect();
-      habr.showNewsWithChoice(Choice.url);
+        Collection test = habr.connect();
 
+        System.out.println("count news = "+ CollectStatistics.quantityNews(test));
+
+        CollectStatistics.showAll(test);// выводим все новости название, ссылка, короткая новости
+        CollectStatistics.showNewsAtNumber(test, 0);//выводим выбранную новость
+        System.out.println(CollectStatistics.words(test, 1));// подсчитываем количество слов в новости
     }
 
 }
